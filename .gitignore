@@ -1,0 +1,15 @@
+.idea
+
+amazon_s3/*
+!amazon_s3/.gitkeep
+
+amazon_s3/tweets/*
+!amazon_s3/tweets/
+!amazon_s3/tweets/.gitkeep
+
+amazon_s3/checkpoint/*
+!amazon_s3/checkpoint/
+!amazon_s3/checkpoint/.gitkeep
+
+.DS_Store
+environments

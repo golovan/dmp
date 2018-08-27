@@ -1,0 +1,53 @@
+version: '3.2'
+volumes:
+    rabbitdb:
+    cassandradb:
+    sparklogs:
+
+services:
+
+    rabbitmq:
+        container_name: rabbitmq
+        hostname: rabbitmq
+        build: rabbitmq
+        ports:
+            - "15672:15672"  # management port (guest:guest)
+            - "5672:5672"
+        volumes:
+            - rabbitdb:/var/lib/rabbitmq
+        env_file: "environments"
+
+    cassandra:
+        container_name: cassandra
+        hostname: cassandra
+        image: cassandra:3
+        ports:
+            - "9042:9042"
+        volumes:
+            - cassandradb:/var/lib/cassandra
+        environment:
+            - MAX_HEAP_SIZE=3600M
+            - HEAP_NEWSIZE=200M
+
+    spark:
+        container_name: spark
+        hostname: spark
+        build: spark
+        depends_on:
+            - cassandra
+            - rabbitmq
+        ports:
+            - 4140-4149:4040-4049
+        volumes:
+            - ./amazon_s3/:/amazon_s3
+            - sparklogs:/opt/spark/logs
+        env_file: "environments"
+        environment:
+            - SPARK_WORKER_MEMORY=750M
+            - SPARK_DRIVER_MEMORY=750M
+            - SPARK_CORES=4
+            - SPARK_MASTER=local[*]
+            - SPARK_TOTAL_CORES=4
+            - SPARK_MAIN_CLASS=Extractor
+            - SPARK_JAR=/amazon_s3/app.jar
+        entrypoint: bash -c "/start.sh"
