@@ -1,0 +1,5 @@
+project/*
+!project/assemble.sbt
+!project/build.properties
+
+target/*

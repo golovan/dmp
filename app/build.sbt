@@ -36,11 +36,11 @@ libraryDependencies ++= {
     "org.specs2" %% "specs2-core" % "4.0.3" % "test",
     "org.specs2" %% "specs2-junit" % "4.0.3" % "test",
     "org.scalatest" %% "scalatest" % "3.1.0-SNAP6" % "test"
-
   )
 }
 
 assemblyMergeStrategy in assembly := {
-  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-  case x => MergeStrategy.first
+  case PathList("META-INF", _ @ _*) => MergeStrategy.discard
+  case PathList("reference.conf") => MergeStrategy.concat
+  case _ => MergeStrategy.first
 }
